@@ -82,6 +82,7 @@ public:
 
 void start();
 void switchPlayer(char& player, bool& recentlyScored);
+bool doContinue();
 
 int main()
 {
@@ -289,22 +290,47 @@ void start()
 
 void switchPlayer(char& player, bool& recentlyScored)
 {
-	if (recentlyScored == false)
+	if (recentlyScored == true)
 	{
-		switch (player)
+		if (doContinue() == true)
 		{
-		case 'W':
-			player = 'B';
-			break;
-		case 'B':
-			player = 'W';
-			break;
-		default:
-			exit(2);
+			recentlyScored = false;
+			return;
+		}
+		else
+		{
+			recentlyScored = false;
 		}
 	}
-	else
+
+	switch (player)
 	{
-		recentlyScored = false;
+	case 'W':
+		player = 'B';
+		break;
+	case 'B':
+		player = 'W';
+		break;
+	default:
+		exit(2);
 	}
+}
+
+bool doContinue()
+{
+	char yn;
+	do
+	{
+		std::cout << "\nContinue? (y/n): ";
+		std::cin >> yn;
+		switch (tolower(yn))
+		{
+		case 'y':
+			return true;
+		case 'n':
+			return false;
+		default:
+			break;
+		}
+	} while (true);
 }
