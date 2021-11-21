@@ -81,7 +81,7 @@ public:
 };
 
 void start();
-void switchPlayer(char& player);
+void switchPlayer(char& player, bool& recentlyScored);
 
 int main()
 {
@@ -94,6 +94,8 @@ void start()
 	square field[8][8];
 
 	char currentPlayer = 'W';
+
+	bool recentlyScored = false;
 
 	std::string select, target;
 	int selectX, selectY, targetX, targetY;
@@ -109,7 +111,7 @@ void start()
 	do
 	{
 		system("cls");
-		//////////print field
+		//////////////print board
 
 		for (int height = 8 * 4; height >= 0; height--)
 		{
@@ -171,25 +173,6 @@ void start()
 			std::cout << "\n";
 		}
 
-		/*for (int height = 7; height >= 0; height--)
-		{
-			std::cout << "\n" << height + 1;
-
-			for (int length = 0; length < 8; length++)
-			{
-				field[length][height].printDebug();
-			}
-			std::cout << "";
-		}
-
-		std::cout << "\n";
-		std::cout << " ";
-
-		for (int length = 0; length < 8; length++)
-		{
-			std::cout << (char)(length + 97);
-		}*/
-
 		std::cout << "\n";
 		std::cout << "\nCurrent player: " << currentPlayer << "\n";
 
@@ -221,7 +204,7 @@ void start()
 			}
 		} while (true);
 
-		///////////target
+		//////////////target
 		do
 		{
 			std::cout << "\nSelect target: ";
@@ -236,7 +219,6 @@ void start()
 				{
 					if ((targetX - selectX == 1 || targetX - selectX == -1) && (targetY - selectY == 1 || targetY - selectY == -1))//check if trying to move once
 					{
-						std::cout << "JUMP!";
 						std::swap(field[selectX][selectY], field[targetX][targetY]);
 						break;
 					}
@@ -244,9 +226,41 @@ void start()
 					{
 						if (field[(selectX + targetX) / 2][(selectY + targetY) / 2].getPawn() != ' ' && field[(selectX + targetX) / 2][(selectY + targetY) / 2].getPawn() != currentPlayer)//check if there is pawn to destroy
 						{
-							std::cout << "ATTACK!";
 							field[(selectX + targetX) / 2][(selectY + targetY) / 2].destroyPawn();
 							std::swap(field[selectX][selectY], field[targetX][targetY]);
+
+							if ((targetX + 2 < 8 && targetY + 2 < 8) && field[targetX + 1][targetY + 1].getPawn() != ' ' && field[targetX + 1][targetY + 1].getPawn() != currentPlayer)
+							{
+								if (field[targetX + 2][targetY + 2].getPawn() == ' ')
+								{
+									recentlyScored = true;
+									break;
+								}
+							}
+							if ((targetX - 2 >= 0 && targetY - 2 >= 0) && field[targetX - 1][targetY - 1].getPawn() != ' ' && field[targetX - 1][targetY - 1].getPawn() != currentPlayer)
+							{
+								if (field[targetX - 2][targetY - 2].getPawn() == ' ')
+								{
+									recentlyScored = true;
+									break;
+								}
+							}
+							if ((targetX - 2 >= 0 && targetY + 2 < 8) && field[targetX - 1][targetY + 1].getPawn() != ' ' && field[targetX - 1][targetY + 1].getPawn() != currentPlayer)
+							{
+								if (field[targetX - 2][targetY + 2].getPawn() == ' ')
+								{
+									recentlyScored = true;
+									break;
+								}
+							}
+							if ((targetX + 2 < 8 && targetY - 2 >= 0) && field[targetX + 1][targetY - 1].getPawn() != ' ' && field[targetX + 1][targetY - 1].getPawn() != currentPlayer)
+							{
+								if (field[targetX + 2][targetY - 2].getPawn() == ' ')
+								{
+									recentlyScored = true;
+									break;
+								}
+							}
 							break;
 						}
 						else
@@ -269,21 +283,28 @@ void start()
 				std::cout << "Invalid input.\n";
 			}
 		} while (true);
-		switchPlayer(currentPlayer);
+		switchPlayer(currentPlayer, recentlyScored);
 	} while (true);
 }
 
-void switchPlayer(char& player)
+void switchPlayer(char& player, bool& recentlyScored)
 {
-	switch (player)
+	if (recentlyScored == false)
 	{
-	case 'W':
-		player = 'B';
-		break;
-	case 'B':
-		player = 'W';
-		break;
-	default:
-		exit(2);
+		switch (player)
+		{
+		case 'W':
+			player = 'B';
+			break;
+		case 'B':
+			player = 'W';
+			break;
+		default:
+			exit(2);
+		}
+	}
+	else
+	{
+		recentlyScored = false;
 	}
 }
