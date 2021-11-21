@@ -76,6 +76,10 @@ public:
 	{
 		return pawn;
 	}
+	void destroyPawn()
+	{
+		pawn = ' ';
+	}
 };
 
 void start();
@@ -126,8 +130,9 @@ void start()
 		}
 		std::cout << "\n";
 
-		//////////////select
+		std::cout << "\nCurrent player: " << currentPlayer << "\n";
 
+		//////////////select
 		do
 		{
 			std::cout << "\nSelect pawn: ";
@@ -151,34 +156,56 @@ void start()
 			}
 			else
 			{
-				//std::cout << "Invalid input.\n";
+				std::cout << "Invalid input.\n";
 			}
 		} while (true);
 
+		///////////target
 		do
 		{
 			std::cout << "\nSelect target: ";
 			getline(std::cin, target);
-			if ((target[1] > '0' && target[1] <= '8') && (target[0] >= 'a' && target[0] <= 'h'))
+			if ((target[1] > '0' && target[1] <= '8') && (target[0] >= 'a' && target[0] <= 'h'))//validates input
 			{
 				std::cout << "Valid\n";
 				targetX = target[0] - 96 - 1;
 				targetY = target[1] - 48 - 1;
 
-				if ((targetX + targetY) % 2 == 0 && field[targetX][targetY].getPawn() == ' ')
+				if ((targetX + targetY) % 2 == 0 && field[targetX][targetY].getPawn() == ' ')////check if trying to move on correct field and if its empty
 				{
-					std::cout << "ATTACK!";
-					std::swap(field[selectX][selectY], field[targetX][targetY]);
-					break;
+					if ((targetX - selectX == 1 || targetX - selectX == -1) && (targetY - selectY == 1 || targetY - selectY == -1))//check if trying to move once
+					{
+						std::cout << "JUMP!";
+						std::swap(field[selectX][selectY], field[targetX][targetY]);
+						break;
+					}
+					else if ((targetX - selectX == 2 || targetX - selectX == -2) && (targetY - selectY == 2 || targetY - selectY == -2))//check if trying to move twice
+					{
+						if (field[(selectX + targetX) / 2][(selectY + targetY) / 2].getPawn() != ' ' && field[(selectX + targetX) / 2][(selectY + targetY) / 2].getPawn() != currentPlayer)//check if there is pawn to destroy
+						{
+							std::cout << "ATTACK!";
+							field[(selectX + targetX) / 2][(selectY + targetY) / 2].destroyPawn();
+							std::swap(field[selectX][selectY], field[targetX][targetY]);
+							break;
+						}
+						else
+						{
+							std::cout << "No pawn to destroy.\n";
+						}
+					}
+					else
+					{
+						std::cout << "Invalid move.\n";
+					}
 				}
 				else
 				{
-					std::cout << "not attack :c";
+					std::cout << "Field not empty.\n";
 				}
 			}
 			else
 			{
-				//std::cout << "Invalid input.\n";
+				std::cout << "Invalid input.\n";
 			}
 		} while (true);
 		switchPlayer(currentPlayer);
