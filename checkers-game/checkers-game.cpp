@@ -40,9 +40,7 @@ public:
 
 	void printDebug()
 	{
-		//std::cout << "x: " << x + 1 << " y: " << y + 1 << " pawn: " << pawn << "\t";
-		//std::cout << x + 1 << "/" << y + 1 << "-" << pawn << "\t";
-		std::cout << pawn << "\t";
+		std::cout << " " << pawn << " ";
 	}
 	char getX()
 	{
@@ -112,24 +110,87 @@ void start()
 	{
 		system("cls");
 		//////////print field
-		for (int height = 7; height >= 0; height--)
+
+		for (int height = 8 * 4; height >= 0; height--)
 		{
-			std::cout << height + 1 << "\t";
+			if (height % 4 == 0)
+			{
+				for (int width = 0; width <= 8 * 4; width++)
+				{
+					if (width % 4 == 2 && height == 0)
+					{
+						std::cout << " " << (char)((width / 4) + 97) << " ";
+					}
+					else if (width % 4 == 0)
+					{
+						std::cout << "|";
+					}
+					else
+					{
+						std::cout << "---";
+					}
+				}
+			}
+			else if (height % 4 == 2)
+			{
+				for (int width = 0; width <= 8 * 4; width++)
+				{
+					if (width == 0)
+					{
+						std::cout << (height / 4) + 1;
+					}
+					else if (width % 4 == 2)
+					{
+						field[width / 4][height / 4].printDebug();
+					}
+					else if (width % 4 == 0)
+					{
+						std::cout << "|";
+					}
+					else
+					{
+						std::cout << "   ";
+					}
+				}
+			}
+			else
+			{
+				for (int width = 0; width <= 8 * 4; width++)
+				{
+					if (width % 4 == 0)
+					{
+						std::cout << "|";
+					}
+					else
+					{
+						std::cout << "   ";
+					}
+				}
+			}
+
+			std::cout << "\n";
+		}
+
+		/*for (int height = 7; height >= 0; height--)
+		{
+			std::cout << "\n" << height + 1;
 
 			for (int length = 0; length < 8; length++)
 			{
 				field[length][height].printDebug();
 			}
-			std::cout << "\n\n\n\n";
+			std::cout << "";
 		}
 
-		std::cout << "\t";
+		std::cout << "\n";
+		std::cout << " ";
+
 		for (int length = 0; length < 8; length++)
 		{
-			std::cout << (char)(length + 97) << "\t";
-		}
-		std::cout << "\n";
+			std::cout << (char)(length + 97);
+		}*/
 
+		std::cout << "\n";
 		std::cout << "\nCurrent player: " << currentPlayer << "\n";
 
 		//////////////select
@@ -226,62 +287,3 @@ void switchPlayer(char& player)
 		exit(2);
 	}
 }
-
-//void initBoard(int boardSize)
-//{
-//	for (int height = 0; height <= boardSize * 4; height++)
-//	{
-//		if (height % 4 == 0)
-//		{
-//			for (int width = 0; width <= boardSize * 4; width++)
-//			{
-//				if (width % 4 == 2 && height == boardSize * 4)
-//				{
-//					std::cout << " 1 ";
-//				}
-//				else if (width % 4 == 0)
-//				{
-//					std::cout << "|";
-//				}
-//				else
-//				{
-//					std::cout << "---";
-//				}
-//			}
-//		}
-//		else if (height % 4 == 2)
-//		{
-//			for (int width = 0; width <= boardSize * 4; width++)
-//			{
-//				if (width == 0)
-//				{
-//					std::cout << "a";
-//				}
-//				else if (width % 4 == 0)
-//				{
-//					std::cout << "|";
-//				}
-//				else
-//				{
-//					std::cout << "   ";
-//				}
-//			}
-//		}
-//		else
-//		{
-//			for (int width = 0; width <= boardSize * 4; width++)
-//			{
-//				if (width % 4 == 0)
-//				{
-//					std::cout << "|";
-//				}
-//				else
-//				{
-//					std::cout << "   ";
-//				}
-//			}
-//		}
-//
-//		std::cout << "\n";
-//	}
-//}
